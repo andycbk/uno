@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>UNO-GO! 掌上派對</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="game-container">
+        <!-- 對手區域 -->
+        <div id="opponents-area">
+            <div class="opponent" id="opponent-1">
+                <div class="avatar">AI 1</div>
+                <div class="card-count" data-count="7">7</div>
+            </div>
+            <div class="opponent" id="opponent-2">
+                <div class="avatar">AI 2</div>
+                <div class="card-count" data-count="7">7</div>
+            </div>
+            <div class="opponent" id="opponent-3">
+                <div class="avatar">AI 3</div>
+                <div class="card-count" data-count="7">7</div>
+            </div>
+        </div>
+
+        <!-- 牌桌中央區域 -->
+        <div id="table-area">
+            <div class="pile" id="draw-pile">
+                <div class="card-back">UNO</div>
+            </div>
+            <div class="pile" id="discard-pile">
+                <!-- 當前出的牌會顯示在這裡 -->
+            </div>
+        </div>
+        
+        <!-- 遊戲訊息提示 -->
+        <div id="game-message">點擊「開始遊戲」</div>
+
+        <!-- 玩家區域 -->
+        <div id="player-area">
+            <div id="player-hand-wrapper">
+                <div id="player-hand">
+                    <!-- 玩家的牌會顯示在這裡 -->
+                </div>
+            </div>
+            <button id="uno-button">UNO!</button>
+        </div>
+    </div>
+
+    <!-- 顏色選擇彈窗 (預設隱藏) -->
+    <div id="color-picker" class="hidden">
+        <div class="color-option" data-color="red"></div>
+        <div class="color-option" data-color="yellow"></div>
+        <div class="color-option" data-color="green"></div>
+        <div class="color-option" data-color="blue"></div>
+    </div>
+    
+    <!-- 遊戲開始/結束畫面 -->
+    <div id="game-overlay">
+        <div id="game-modal">
+            <h2 id="modal-title">UNO-GO!</h2>
+            <p id="modal-text">準備好開始一場掌上派對了嗎？</p>
+            <button id="start-game-button">開始遊戲</button>
+        </div>
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
+</html>

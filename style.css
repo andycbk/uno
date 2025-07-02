@@ -1,0 +1,296 @@
+/* 基本設定 */
+:root {
+    --card-width: 60px;
+    --card-height: 90px;
+    --red: #ff5555;
+    --yellow: #ffaa00;
+    --green: #55aa55;
+    --blue: #5555ff;
+    --black: #333;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: 'Helvetica Neue', 'Arial', sans-serif;
+    background: linear-gradient(160deg, #2a3a5e, #1d2841);
+    color: white;
+    overflow: hidden; /* 防止滾動 */
+    user-select: none; /* 防止選取文字 */
+}
+
+/* 主要遊戲容器 */
+#game-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+    padding: 10px;
+    position: relative;
+}
+
+/* 對手區域 */
+#opponents-area {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    height: 60px;
+}
+.opponent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease, opacity 0.3s;
+}
+.opponent.active {
+    transform: scale(1.2);
+    opacity: 1;
+}
+.opponent:not(.active) {
+    opacity: 0.6;
+}
+.avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #777;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+.card-count {
+    background: rgba(0,0,0,0.5);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 14px;
+    margin-top: 5px;
+}
+.opponent.has-uno .card-count {
+    background-color: var(--red);
+    animation: pulse 1s infinite;
+}
+
+/* 牌桌區域 */
+#table-area {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+.pile {
+    width: var(--card-width);
+    height: var(--card-height);
+    border: 2px dashed rgba(255,255,255,0.3);
+    border-radius: 8px;
+    position: relative;
+}
+#draw-pile {
+    cursor: pointer;
+}
+#draw-pile .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+}
+
+/* 遊戲訊息 */
+#game-message {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    z-index: 10;
+    text-align: center;
+    min-width: 150px;
+}
+
+/* 玩家區域 */
+#player-area {
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+#player-hand-wrapper {
+    flex-grow: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 10px; /* 留出空間給捲軸 */
+}
+#player-hand {
+    display: flex;
+    justify-content: flex-start; /* 手牌從左開始排列 */
+    align-items: center;
+    padding: 0 15px;
+    min-width: 100%; /* 確保內容可以滾動 */
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* 紙牌樣式 */
+.card, .card-back {
+    width: var(--card-width);
+    height: var(--card-height);
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    position: relative; /* 為了小數字 */
+    flex-shrink: 0; /* 防止卡牌被壓縮 */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+#player-hand .card {
+    margin-left: -25px; /* 卡牌重疊效果 */
+}
+#player-hand .card:first-child {
+    margin-left: 0;
+}
+#player-hand .card.playable {
+    cursor: pointer;
+    transform: translateY(-15px) scale(1.05);
+    box-shadow: 0 5px 15px rgba(255, 255, 0, 0.4);
+}
+#player-hand .card:hover {
+    transform: translateY(-15px) scale(1.05);
+}
+
+.card[data-color="red"] { background-color: var(--red); }
+.card[data-color="yellow"] { background-color: var(--yellow); }
+.card[data-color="green"] { background-color: var(--green); }
+.card[data-color="blue"] { background-color: var(--blue); }
+.card[data-color="black"] { background-color: var(--black); }
+
+.card-back {
+    background: linear-gradient(135deg, #1f1f1f, #4a4a4a);
+    font-size: 24px;
+    color: var(--red);
+    text-shadow: 0 0 5px var(--red);
+}
+
+.card .value {
+    font-size: 10px;
+    position: absolute;
+}
+.card .value.top-left { top: 5px; left: 7px; }
+.card .value.bottom-right { bottom: 5px; right: 7px; transform: rotate(180deg); }
+
+
+/* UNO 按鈕 */
+#uno-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--yellow);
+    color: var(--black);
+    font-size: 20px;
+    font-weight: bold;
+    border: 3px solid white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    cursor: pointer;
+    z-index: 20;
+    transition: transform 0.2s;
+    display: none; /* 預設隱藏 */
+}
+#uno-button:active {
+    transform: scale(0.95);
+}
+#uno-button.active {
+    display: block;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 170, 0, 0.7); }
+    70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 170, 0, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 170, 0, 0); }
+}
+
+/* 顏色選擇器 */
+#color-picker {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 15px;
+    background: rgba(0,0,0,0.8);
+    border-radius: 15px;
+    z-index: 100;
+}
+.color-option {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.color-option:hover {
+    transform: scale(1.1);
+}
+.color-option[data-color="red"] { background-color: var(--red); }
+.color-option[data-color="yellow"] { background-color: var(--yellow); }
+.color-option[data-color="green"] { background-color: var(--green); }
+.color-option[data-color="blue"] { background-color: var(--blue); }
+
+.hidden {
+    display: none !important;
+}
+
+/* 遊戲開始/結束畫面 */
+#game-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+}
+#game-modal {
+    background: #2a3a5e;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 2px solid #556a99;
+}
+#modal-title { margin-top: 0; font-size: 28px; }
+#modal-text { font-size: 16px; margin-bottom: 25px; }
+#start-game-button {
+    padding: 12px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #1d2841;
+    background-color: var(--yellow);
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+#start-game-button:hover {
+    background-color: #ffc107;
+}
